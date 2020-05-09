@@ -6,13 +6,23 @@
             .panel-body
                 %h1= @pic.title
                 %p= @pic.description
+                %h1= "コメント"
+                - if @pic.comments.any?
+                    %ul
+                        - @pic.comments.each do |comment|
+                            %li
+                            = @pic.user.email
+                            = comment.body
+                            = link_to '[del]', pic_comment_path(@pic, comment), method: :delete, class: 'command', data: {confirm: 'sure?'}
+                = form_for ([@pic, @pic.comments.build]) do |f|
+                    %p= f.text_field :body
+                    %p= f.submit
             .panel-footer
                 .row
                     .col-md-6
                         %p.user
                         by
                         = @pic.user.email
-
                     .col.md-6
                         .btn-group.pull-right
                             = link_to like_pic_path(@pic), method: :put, class: "btn btn-default" do
